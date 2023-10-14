@@ -5,7 +5,7 @@ const auth = require('../middlware/auth')
 const User = require('../models/User');
 const Contact = require('../models/Contact');
 
-//@route GET api/users
+//@route GET api/contacts
 //@desc Get all the users contacts
 //@access Private
 
@@ -21,7 +21,7 @@ router.get('/', auth,async (req,res)=>{
     }
 });
 
-//@route POST api/users
+//@route POST api/contacts
 //@desc Add a new  contact
 //@access Private
 
@@ -51,21 +51,75 @@ router.post('/', [auth,[
 
 
 
-//@route PUT api/users
+//@route PUT api/contacts/:id
 //@desc Update the contact
 //@access Private
 
-router.put('/:id', (req,res)=>{
-    res.send('Update the contact');
+router.put('/:id',auth, async(req,res)=>{
+    const {name, email, phone, type} = req.body;
+
+    const contactFields={ };
+
+    if(name) contactFields.name=name;
+    if(email) contactFields.email=email;
+    if(phone) contactFields.phone=phone;
+    if(type) contactFields.type=type;
+
+    try {
+        let contact = await Contact.findById(req.params.id);
+
+        //check if contact exists
+        if(!contact) return res.status(404).json({msg:'This contact does not exist'});
+
+        //if the contact exist, then make user the currently signed in user owns the contact
+
+        if(contact.user.toString() !== req.user.id){
+            return res.status(401).json({msg:' you do not have the correct authorization to update this contact'})
+        }
+
+        //Update contact if above condition pass
+        contact = await Contact.findByIdAndUpdate(req.params.id,
+            {$set: contactFields},
+            {new:true}
+            );
+
+         // Return the updated contact
+        res.json(contact);   
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+
 });
 
 
-//@route DELETE api/users
+//@route DELETE api/contact/:id
 //@desc Delete a contact
 //@access Private
 
-router.delete('/:id', (req,res)=>{
-    res.send('Delete a contact');
+router.delete('/:id',auth,async (req,res)=>{
+    try {
+        let contact = await Contact.findById(req.params.id);
+
+        //check if contact exists
+        if(!contact) return res.status(404).json({msg:'This contact does not exist'});
+
+        //if the contact exist, then make user the currently signed in user owns the contact
+
+        if(contact.user.toString() !== req.user.id){
+            return res.status(401).json({msg:' you do not have the correct authorization to update this contact'})
+        }
+
+        //Find the contact Remove from the MongoDB
+        await Contact.findByIdAndRemove(req.params.id);
+
+        //Return a cofirmation message
+        res.json({msg:'This conatct has been removed'});
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
 });
 
 
