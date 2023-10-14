@@ -3,10 +3,20 @@ const connectDB = require('./config/db');
 
 const app = express();
 
+
+// ini middleware 
+
+app.use(express.json({extended: false}));
+
+
+
+
 // Connect to mongoDB
 connectDB();
 
 app.get('/', (req,res)=> res.json({msg: 'Welcome to contact manager API'}));
+
+
 
 // Define Routes here
 
