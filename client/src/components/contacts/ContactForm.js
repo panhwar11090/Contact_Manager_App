@@ -1,5 +1,6 @@
 import React,{useState, useContext, useEffect} from "react";
 import ContactContext from "../../context/contact/contactContext";
+import { CSSTransition, TransitionGroup,} from 'react-transition-group';
 
 const ContactForm = () => {
     const contactContext = useContext(ContactContext);
@@ -69,7 +70,7 @@ const ContactForm = () => {
                 onChange={onChange}
             />
             <h5>Contact Type</h5>
-            <input type='radio' name='type' value='personal' checked={ type === 'personal'} onChange={onchange}/>personal
+            <input type='radio' name='type' value='personal' checked={ type === 'personal'} onChange={onChange}/>personal
             {' '}
             <input type='radio' name='type' value='professional' checked={type === 'professional'} onChange={onChange}/> Professional
             <div>
