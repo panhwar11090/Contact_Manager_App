@@ -1,7 +1,29 @@
-import React,{useState} from 'react';
+import React,{useContext, useState, useEffect} from 'react';
+import AuthContext from '../../context/auth/authContext';
+import AlertContext from '../../context/alert/alertContext';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-    
+const Login = (props) => {
+    const navigate = useNavigate();
+
+    const alertContext = useContext(AlertContext);
+    const authContext = useContext(AuthContext);
+
+    const {setAlert} = alertContext;
+    const {login, error,clearErrors, isAuthenticated} = authContext;
+
+    useEffect(() => {
+        if(isAuthenticated) {
+            navigate('/');
+        }
+        
+        if(error === 'Incorrect password') {
+            setAlert(error, 'danger');
+            clearErrors();
+        }
+        // eslint-disable-next-line
+    }, [ error, isAuthenticated, props.history])
+
     const [user, setUser] = useState({
         email:'',
         password:''
@@ -13,7 +35,11 @@ const Login = () => {
 
     const onSubmit = e =>{
         e.preventDefault();
-        console.log("User Loged in")
+        if(email === '' || password === ''){
+            setAlert('Please fill the login form', 'danger')
+        }else{
+            login({email,password})
+        }
     }
 
 
