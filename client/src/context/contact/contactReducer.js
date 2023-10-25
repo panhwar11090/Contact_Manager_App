@@ -48,7 +48,7 @@ const contactReducer = (state, action) => {
             return{
                 ...state,
                 current:null,
-                contacts:null
+                
 
             }        
         case FILTER_CONTACTS:
