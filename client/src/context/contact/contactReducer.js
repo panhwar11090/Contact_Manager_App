@@ -47,7 +47,8 @@ const contactReducer = (state, action) => {
         case CLEAR_CURRENT:
             return{
                 ...state,
-                current:null
+                current:null,
+                contacts:null
 
             }        
         case FILTER_CONTACTS:

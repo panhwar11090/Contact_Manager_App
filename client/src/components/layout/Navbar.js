@@ -12,8 +12,9 @@ const Navabr = ({title, icon})=>{
 
     const onLogout =()=>{
 
-        logout();
+        logout();        
         clearContacts();
+        
     }
         
     
