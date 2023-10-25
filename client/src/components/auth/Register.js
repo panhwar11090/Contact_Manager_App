@@ -22,7 +22,7 @@ const Register = (props) => {
             clearErrors();
         }
         // eslint-disable-next-line
-    }, [ error,register, clearErrors, isAuthenticated, props.history])
+    }, [ error, isAuthenticated, props.history])
 
     const [user, setUser] = useState({
         name: '',
