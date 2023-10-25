@@ -63,7 +63,7 @@ const contactReducer = (state, action) => {
             return {
                 ...state,
                 contacts:null,
-                filtered: null,
+                filtered:null,
                 error:null,
                 current:null
             }    
